@@ -2,3 +2,5 @@ ami.id
 snapshot.id
 user-data.ec2
 config.cfg.old
+disk-image-file-role-policy.json
+disk-image-file-role-trust-policy.json

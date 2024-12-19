@@ -62,3 +62,5 @@ fi
 aws --profile ${AWS_PROFILE} iam put-role-policy \
     --role-name vmimport --policy-name ${POLICY_ROLE_NAME} \
     --policy-document "file://disk-image-file-role-policy.json"
+
+#refer to this for more details https://docs.aws.amazon.com/vm-import/latest/userguide/required-permissions.html#vmimport-role
