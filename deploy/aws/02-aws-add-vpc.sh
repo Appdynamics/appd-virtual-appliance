@@ -155,7 +155,6 @@ for ((i=0; i<${#VPN_IPS[@]}; i++)); do
             "IpProtocol=tcp,FromPort=443,ToPort=443,IpRanges=[{CidrIp=${vpnIP}}]"
         if [ "$?" != 0 ]; then
             echo "error authorizing security group ingress rules for VPN ${vpnIP}"
-            exit 1
         fi
     else
         echo "rules for ${vpnIP} already authorized"
@@ -172,7 +171,6 @@ if [ "${inarray}" != "1" ]; then
         --cidr "${SUBNET_CIDR}"
     if [ "$?" != 0 ]; then
         echo "error authorizing security group ingress rules for subnet ${SUBNET_CIDR}"
-        exit 1
     fi
 else
     echo "rules for subnet ${SUBNET_CIDR} ingress already authorized"
@@ -190,7 +188,6 @@ if [ "${inarray}" != "1" ]; then
         --cidr "${SUBNET_CIDR}"
     if [ "$?" != 0 ]; then
         echo "error authorizing security group egress rules for subnet ${SUBNET_CIDR}"
-        exit 1
     fi
 else
     echo "rules for subnet ${SUBNET_CIDR} egress already authorized"

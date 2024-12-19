@@ -48,10 +48,20 @@ EOF
                           --groups "$sgID" \
                           --query 'NetworkInterface.NetworkInterfaceId' --output text)
 
-    # Allocate an Elastic IP
-    allocation_id=$(aws --profile ${AWS_PROFILE} ec2 allocate-address \
-                        --domain vpc \
-                        --query 'AllocationId' --output text)
+#    # Allocate an Elastic IP
+#    allocation_id=$(aws --profile ${AWS_PROFILE} ec2 allocate-address \
+#                        --domain vpc \
+#                        --query 'AllocationId' --output text)
+
+    # Use an existing Elastic IP if available, else allocate a new one
+    if [ ${#EXISTING_EIPS[@]} -gt 0 ]; then
+        allocation_id="${EXISTING_EIPS[0]}"
+        EXISTING_EIPS=("${EXISTING_EIPS[@]:1}") # Remove used IP from list
+    else
+        allocation_id=$(aws --profile ${AWS_PROFILE} ec2 allocate-address \
+                            --domain vpc \
+                            --query 'AllocationId' --output text)
+    fi
 
     # Associate the Elastic IP with the ENI
     aws ec2 --profile ${AWS_PROFILE} associate-address \
