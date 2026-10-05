@@ -13,9 +13,9 @@ if [ -z "${SNAPID}" ]; then
 fi
 
 echo "Using snapshot ..."
-aws --profile ${AWS_PROFILE} ec2 describe-snapshots --snapshot-ids $SNAPID
+aws --profile "${AWS_PROFILE}" ec2 describe-snapshots --snapshot-ids "$SNAPID"
 
-AMI_ID=$(aws --profile ${AWS_PROFILE} ec2 register-image \
+AMI_ID=$(aws --profile "${AWS_PROFILE}" ec2 register-image \
    --architecture x86_64 \
    --description "AppD OnPrem Virtual Appliance for EC2" \
    --ena-support \

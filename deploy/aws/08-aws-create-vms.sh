@@ -13,14 +13,14 @@ if [ -z "${AMI_ID}" ]; then
 fi
 
 # get subnet id
-subnetID=$(aws --profile ${AWS_PROFILE} ec2 describe-subnets --output text --filters Name=tag-value,Values="${SUBNET_NAME}" --query 'Subnets[*].SubnetId')
+subnetID=$(aws --profile "${AWS_PROFILE}" ec2 describe-subnets --output text --filters "Name=tag-value,Values=${SUBNET_NAME}" --query 'Subnets[*].SubnetId')
 if [ -z "${subnetID}" ]; then
     echo "Did not find a subnet with name $SUBNET_NAME, exiting"
     exit 1
 fi
 
 # get security group id
-sgID=$(aws --profile ${AWS_PROFILE} ec2 describe-security-groups --output text --filters Name=tag-value,Values="${SG_NAME}" --query 'SecurityGroups[*].GroupId')
+sgID=$(aws --profile "${AWS_PROFILE}" ec2 describe-security-groups --output text --filters "Name=tag-value,Values=${SG_NAME}" --query 'SecurityGroups[*].GroupId')
 if [ -z "$sgID" ]; then
     echo "Did not find a security group with the name $SG_NAME, exiting"
     exit 1
@@ -42,24 +42,24 @@ appdos:
 EOF
 
     # Create network interface
-    network_intf_id=$(aws --profile ${AWS_PROFILE} ec2 create-network-interface \
+    network_intf_id=$(aws --profile "${AWS_PROFILE}" ec2 create-network-interface \
                           --subnet-id "$subnetID" \
                           --description "VA Network Interface" \
                           --groups "$sgID" \
                           --query 'NetworkInterface.NetworkInterfaceId' --output text)
 
     # Allocate an Elastic IP
-    allocation_id=$(aws --profile ${AWS_PROFILE} ec2 allocate-address \
+    allocation_id=$(aws --profile "${AWS_PROFILE}" ec2 allocate-address \
                         --domain vpc \
                         --query 'AllocationId' --output text)
 
     # Associate the Elastic IP with the ENI
-    aws ec2 --profile ${AWS_PROFILE} associate-address \
-            --allocation-id ${allocation_id} \
-            --network-interface-id ${network_intf_id}
+    aws ec2 --profile "${AWS_PROFILE}" associate-address \
+            --allocation-id "${allocation_id}" \
+            --network-interface-id "${network_intf_id}"
 
     # requires Nitro instance types
-    aws --profile ${AWS_PROFILE} ec2 run-instances \
+    aws --profile "${AWS_PROFILE}" ec2 run-instances \
         --image-id "$AMI_ID" \
 	--instance-type "${VM_TYPE}" \
         --network-interfaces "[{\"NetworkInterfaceId\":\"${network_intf_id}\",\"DeviceIndex\":0}]" \

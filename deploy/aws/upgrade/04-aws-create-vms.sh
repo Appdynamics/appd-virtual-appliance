@@ -29,11 +29,11 @@ appdos:
       dhcp6: false
 EOF
 
-    network_intf_id=$(yq e ".$VM_NAME[1].network_intf_id" $vm_details)
-    data_disk=$(yq e ".$VM_NAME[4].data_disk" $vm_details)
+    network_intf_id=$(VM_NAME="$VM_NAME" yq e '.[strenv(VM_NAME)][1].network_intf_id' "$vm_details")
+    data_disk=$(VM_NAME="$VM_NAME" yq e '.[strenv(VM_NAME)][4].data_disk' "$vm_details")
 
     # requires Nitro instance types
-    new_instance_id=$(aws --profile ${AWS_PROFILE} ec2 run-instances \
+    new_instance_id=$(aws --profile "${AWS_PROFILE}" ec2 run-instances \
                           --image-id "$AMI_ID" \
                        	  --instance-type "${VM_TYPE}" \
                           --network-interfaces "[{\"NetworkInterfaceId\":\"${network_intf_id}\",\"DeviceIndex\":0}]" \
@@ -45,12 +45,12 @@ EOF
                           --query "Instances[0].InstanceId" --output text)
 
     echo "Waiting for instance to come to running state"
-    aws --profile ${AWS_PROFILE} ec2 wait instance-running --instance-ids ${new_instance_id}
+    aws --profile "${AWS_PROFILE}" ec2 wait instance-running --instance-ids "${new_instance_id}"
 
     # Attach the data disk
-    aws --profile ${AWS_PROFILE} ec2 attach-volume \
-        --instance-id ${new_instance_id} \
-        --volume-id ${data_disk} \
+    aws --profile "${AWS_PROFILE}" ec2 attach-volume \
+        --instance-id "${new_instance_id}" \
+        --volume-id "${data_disk}" \
         --device "/dev/sdb" 
 
 done
