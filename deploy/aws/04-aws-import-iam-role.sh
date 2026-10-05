@@ -32,6 +32,6 @@ cat > disk-image-file-role-policy.json << EOF
 }
 EOF
 
-aws --profile ${AWS_PROFILE} iam put-role-policy \
+aws --profile "${AWS_PROFILE}" iam put-role-policy \
     --role-name vmimport --policy-name vmimport \
     --policy-document "file://disk-image-file-role-policy.json"
