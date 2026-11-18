@@ -1,6 +1,13 @@
 # appd-virtual-appliance
 AppD Virtual Appliance (VA) Deployment Utils
 
+### VA upgrade preparation tools
+
+Run these tools on the source VA before stopping services for an upgrade. Usage instructions are included inside each tar bundle.
+
+- [Kafka upgrade preparation](kafka-migrate/kafka-migrate.tar): migrate 25.10 Kafka to KRaft or capture existing Kafka identity on 26.1/26.7.
+- [Capture upgrade credentials](capture-upgrade-credentials/capture-upgrade-credentials.tar): save service credentials in encrypted configuration for upgrade to 26.10.
+
 ### VA AWS deployment reference scripts
 
 Set of reference deployment scripts (deploy/aws) are provided to deploy VA on AWS. Scripts use AWS CLI. Scripts are numbered in the order to be executed.
